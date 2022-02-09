@@ -2,11 +2,11 @@ import mysql.connector as c
 con = c.connect(host='localhost',
                 user = 'root',
                 passwd = 'Ankit@8285',
-                database = 'bank1')
+                database = 'bank2')
 cursor = con.cursor()
 print('Bank Management system ')
 acc_no = 101
-# amt = 1000
+amt = 0
 
 while True:
     choice = input("1.Open Account\n2.Cash Deposit\n3.Cash Withdrawl\n4.Update Account\n5.Account Details\n6.Exit")
@@ -15,32 +15,41 @@ while True:
         mobile = int(input("Enter the mobile number"))
         age = int(input("Enter the age"))
         amt= int(input('Enter the amt'))
-        query = "Insert into cust value({},'{}',{},{},{})".format(acc_no,name,mobile,age,amt)
+        query = "Insert into cust2 value({},'{}',{},{},{})".format(acc_no,name,mobile,age,amt)
         acc_no = acc_no+1
         cursor.execute(query)
         con.commit()
-        print('Account Created!!')
-    elif choice == '2':
-        amt = int(input("Enter the amt to deposit"))
-        query = "UPDATE  cust SET amt={} WHERE acc=101".format(amt)
+        print('Open acc successfully!!')
 
-        acc_no=acc_no+1
+    elif choice == '2':
+        amt = input("Enter the amount to deposite")
+        acc_no = input("Enter your account no")
+        query = "Update cust2 SET amt='{}'+amt where accno='{}'".format(amt, acc_no)
         cursor.execute(query)
         con.commit()
-        print("Amount deposit Successfully!!")
+        print("Amount credit successfully")
 
     elif choice == "3":
-        acc_no = int(input("Enter your acc_no: "))
-        amnt_wdw = int(input("Enter Amt to Withdraw: "))
-        if amnt_wdw > amt:
-            print("Invalid Amount")
-        else:
-            balance = amt - amnt_wdw
-            # print(balance)
-            query = "UPDATE  cust SET amt={} WHERE acc={}".format(balance, acc_no);
-            cursor.execute(query)
-            con.commit()
-            print("Successfully withdrawal")
+        amt = input("Enter the amt to withdraw")
+        acc_no = input("Enter the acc no to withdraw")
+        query = "Update cust2 SET amt='{}'-amt where accno='{}'".format(amt,acc_no)
+        cursor.execute(query)
+        con.commit()
+        print('Amount Debited')
+
+    # elif choice == '4':
+    #     if bal>amt:
+    #         print("Deposit amount is :-",amt)
+    #     else:
+    #         print('Not Deposit!!')
+
+    elif choice =='5':
+        acc_no = input('Enter the acc no')
+        query = "select * from cust2 where accno = '{}'".format(acc_no)
+        cursor.execute(query)
+        data = cursor.fetchall()
+        print(data)
+        con.commit()
 
 
     if choice == '6':
@@ -49,6 +58,8 @@ while True:
 
 
 
+# bug 1----> all my acc have same number.
+# bug 2-----> if you are deposit the cash then previous amt is not added.
 
 
 
